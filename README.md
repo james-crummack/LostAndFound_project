@@ -46,12 +46,12 @@ python app.py
 ```
 
 
-## 👤Demo Accounts
+### 👤Demo Accounts
 
 **Role**	          **Email**	              **Password**
 Admin	      admin@example.com	      admin123
 Employee	  employee@example.com	  emp123
 User	      user@example.com	       user123
 
-## Project Background
+### Project Background
 This project was developed as part of the BEMM459 module at the University of Exeter. It aims to showcase how polyglot persistence can solve real-world business problems by combining relational and non-relational data strategies in a single cohesive system.
