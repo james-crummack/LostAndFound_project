@@ -34,9 +34,10 @@ cd lost-and-found-system
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
 
 ### Start the application
-python app.py
+```python app.py```
 
 
 ## 👤Demo Accounts
