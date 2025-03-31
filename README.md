@@ -27,9 +27,8 @@ A polyglot persistence web application designed for managing lost and found item
 
 ### 1. Clone the repository
 ```
-bash
-git clone https://github.com/yourusername/lost-and-found-system.git
-cd lost-and-found-system
+git clone https://github.com/james-crummack/LostAndFound_project.git
+cd LostAndFound_project
 ```
 
 ### 2. Set up the environment
