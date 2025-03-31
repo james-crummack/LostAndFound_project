@@ -49,10 +49,12 @@ python app.py
 
 ### 👤Demo Accounts
 
-**Role**	          **Email**	              **Password**
-Admin	      admin@example.com	      admin123
-Employee	  employee@example.com	  emp123
-User	      user@example.com	       user123
+| Role     | Email               | Password  |
+|----------|---------------------|-----------|
+| Admin    | admin@example.com   | admin123  |
+| Employee | employee@example.com| emp123    |
+| User     | user@example.com    | user123   |
+
 
 ---
 
