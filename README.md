@@ -26,20 +26,24 @@ A polyglot persistence web application designed for managing lost and found item
 ## 🚀 Getting Started
 
 ### 1. Clone the repository
-```bash
+```
+bash
 git clone https://github.com/yourusername/lost-and-found-system.git
 cd lost-and-found-system
 ```
 
 ### 2. Set up the environment
-```python3 -m venv venv
+```
+python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
 
 ### Start the application
-```python app.py```
+```
+python app.py
+```
 
 
 ## 👤Demo Accounts
