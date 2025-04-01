@@ -23,7 +23,7 @@ A polyglot persistence web application designed for managing lost and found item
 
 ---
 
-## Getting Started
+## Running the WebApp
 
 ### 1. Clone the repository
 ```
