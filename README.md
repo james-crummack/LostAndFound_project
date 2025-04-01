@@ -1,16 +1,16 @@
-# 🚂 Lost & Found Management System
+# Lost & Found Management System
 
 A polyglot persistence web application designed for managing lost and found items across a transport network. This project demonstrates the integration of **MySQL** (RDBMS) and **MongoDB** (NoSQL) with **Flask** as the backend framework. It includes full **RBAC (Role-Based Access Control)**, CRUD operations, and SQL/NoSQL interoperability.
 
 ---
 
-## 📚 Features
+##  Features
 
-- 🧑‍💼 **Role-Based Access Control (RBAC)**: Admin, Employee, and User roles with dynamic permissions.
-- 🗄️ **CRUD Support**: Perform Create, Read, Update, Delete operations across SQL and MongoDB.
-- 🧾 **Polyglot Persistence**: Combines the structure of MySQL with the flexibility of MongoDB.
-- 📥 **Data Export**: Query results can be downloaded as CSV.
-- 🎨 **Bootstrap-styled UI**: Clean, dark-mode interface for a better UX.
+-  **Role-Based Access Control (RBAC)**: Admin, Employee, and User roles with dynamic permissions.
+-  **CRUD Support**: Perform Create, Read, Update, Delete operations across SQL and MongoDB.
+-  **Polyglot Persistence**: Combines the structure of MySQL with the flexibility of MongoDB.
+-  **Data Export**: Query results can be downloaded as CSV.
+-  **Bootstrap-styled UI**: Clean, dark-mode interface for a better UX.
 
 ---
 
@@ -23,7 +23,7 @@ A polyglot persistence web application designed for managing lost and found item
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the repository
 ```
@@ -46,7 +46,7 @@ python app.py
 
 ---
 
-### 👤Demo Accounts
+### Demo Accounts
 
 | Role     | Email               | Password  |
 |----------|---------------------|-----------|
