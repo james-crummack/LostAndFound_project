@@ -14,7 +14,7 @@ A polyglot persistence web application designed for managing lost and found item
 
 ---
 
-## 🔧 Technologies Used
+## Technologies Used
 
 - **Backend**: Python (Flask)
 - **Databases**: MySQL, MongoDB
