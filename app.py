@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template, request, send_file, session, redirect, url_for
 import mysql.connector
 from pymongo import MongoClient
@@ -106,14 +105,76 @@ def index():
                 conn = mysql.connector.connect(**mysql_config)
                 cursor = conn.cursor()
                 cursor.execute(sql_query_raw)
+                # 👇 Place this inside the SELECT query handler in the `/index` route:
                 if sql_query.startswith("select"):
                     rows = cursor.fetchall()
-                    sql_export = rows
                     sql_export_headers = [desc[0] for desc in cursor.description]
-                    sql_result = f"<table class='table table-striped'><thead><tr>{''.join(f'<th>{col}</th>' for col in sql_export_headers)}</tr></thead><tbody>"
+
+                    # Table match flags
+                    is_claims_query = "from claims" in sql_query
+                    is_items_query = "from lost_items" in sql_query
+                    is_logs_query = "from item_logs" in sql_query
+                    is_users_query = "from users" in sql_query
+
+                    mongo_fields = []
+                    mongo_collection = None
+                    mongo_key = None
+                    use_mongo = False
+
+                    # Determine MongoDB mapping
+                    if is_claims_query or is_items_query or is_logs_query:
+                        mongo_fields = ["Image_URL", "Additional_Notes", "Tags"]
+                        mongo_collection = "Lost_Items_Metadata"
+                        mongo_key = "Item_ID"
+                        use_mongo = True
+
+                    elif is_users_query:
+                        mongo_fields = ["Last_Action", "Last_Activity", "Recent_Message"]
+                        mongo_collection = "User_Metadata_Combined"
+                        mongo_key = "User_ID"
+                        use_mongo = True
+
+                        def build_user_metadata(uid):
+                            activity = mongo_db["User_Activity_Logs"].find_one({"User_ID": uid}, sort=[("Timestamp", -1)])
+                            notif = mongo_db["Notifications"].find_one({"User_ID": uid}, sort=[("Timestamp", -1)])
+                            return {
+                                "Last_Action": activity.get("Action") if activity else "",
+                                "Last_Activity": activity.get("Timestamp") if activity else "",
+                                "Recent_Message": notif.get("Message") if notif else ""
+                            }
+
+                    # Prepare headers
+                    if use_mongo:
+                        sql_export_headers += mongo_fields
+
+                    # Merge SQL + MongoDB
+                    merged_rows = []
                     for row in rows:
+                        row_dict = dict(zip(sql_export_headers[:len(row)], row))  # slice only original headers
+
+                        if use_mongo:
+                            lookup_id = row_dict.get(mongo_key)
+                            mongo_doc = {}
+
+                            if is_users_query:
+                                mongo_doc = build_user_metadata(lookup_id)
+                            else:
+                                mongo_doc = mongo_db[mongo_collection].find_one({mongo_key: lookup_id}) or {}
+
+                            for field in mongo_fields:
+                                row_dict[field] = mongo_doc.get(field, "")
+
+                        merged_rows.append([row_dict.get(col, "") for col in sql_export_headers])
+
+                    sql_export = merged_rows
+
+                    # Render HTML Table
+                    sql_result = f"<table class='table table-striped'><thead><tr>{''.join(f'<th>{col}</th>' for col in sql_export_headers)}</tr></thead><tbody>"
+                    for row in sql_export:
                         sql_result += "<tr>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>"
                     sql_result += "</tbody></table>"
+
+
                 else:
                     conn.commit()
                     sql_result = "✅ SQL query executed successfully."
@@ -135,19 +196,17 @@ def index():
             user_role = session.get("role")
             user_id = session.get("user_id")
 
-            # Restrict user access to specific collections and their own data
             if user_role == "User":
                 if collection == "Notifications" or collection == "Lost_Items_Metadata":
                     parsed_input["User_ID"] = user_id
                 else:
                     mongo_result = "❌ Access denied to this collection."
                     return render_template("index.html",
-                                       sql_result=sql_result,
-                                       mongo_result=mongo_result,
-                                       sql_tables=sql_tables,
-                                       mongo_collections=mongo_collections)
+                                           sql_result=sql_result,
+                                           mongo_result=mongo_result,
+                                           sql_tables=sql_tables,
+                                           mongo_collections=mongo_collections)
 
-            # Additional optional security: prevent non-Admin from modifying MongoDB
             if mode == "insert" and user_role in ["Admin", "Employee"]:
                 mongo_db[collection].insert_one(parsed_input)
                 mongo_result = "✅ Document inserted successfully."
@@ -185,7 +244,6 @@ def index():
 
         except Exception as e:
             mongo_result = f"❌ MongoDB Error: {e}"
-
 
     return render_template("index.html",
                            sql_result=sql_result,
@@ -227,3 +285,4 @@ def download_mongo_csv():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
